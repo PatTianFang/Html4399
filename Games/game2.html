@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>俄罗斯方块游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('tetrisCanvas');
+        const ctx = canvas.getContext('2d');
+        const ROWS = 20;
+        const COLS = 10;
+        const BLOCK_SIZE = 30;
+
+        // 初始化网格
+        let grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+
+        // 定义方块形状
+        const SHAPES = [
+            [[1, 1, 1, 1]], // I
+            [[1, 1], [1, 1]], // O
+            [[0, 1, 0], [1, 1, 1]], // T
+            [[1, 1, 0], [0, 1, 1]], // S
+            [[0, 1, 1], [1, 1, 0]], // Z
+            [[1, 1, 1], [1, 0, 0]], // L
+            [[1, 1, 1], [0, 0, 1]] // J
+        ];
+
+        let currentShape = getRandomShape();
+        let currentX = 3;
+        let currentY = 0;
+
+        function getRandomShape() {
+            return SHAPES[Math.floor(Math.random() * SHAPES.length)];
+        }
+
+        function drawGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    if (grid[row][col]) {
+                        ctx.fillStyle = 'blue';
+                        ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                        ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    }
+                }
+            }
+        }
+
+        function drawShape() {
+            ctx.fillStyle = 'red';
+            for (let row = 0; row < currentShape.length; row++) {
+                for (let col = 0; col < currentShape[row].length; col++) {
+                    if (currentShape[row][col]) {
+                        ctx.fillRect((currentX + col) * BLOCK_SIZE, (currentY + row) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                        ctx.strokeRect((currentX + col) * BLOCK_SIZE, (currentY + row) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    }
+                }
+            }
+        }
+
+        function moveShapeDown() {
+            if (!collision(0, 1)) {
+                currentY++;
+            } else {
+                mergeShape();
+                currentShape = getRandomShape();
+                currentX = 3;
+                currentY = 0;
+                if (collision(0, 0)) {
+                    alert('游戏结束！');
+                    grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                }
+            }
+        }
+
+        function collision(offsetX, offsetY) {
+            for (let row = 0; row < currentShape.length; row++) {
+                for (let col = 0; col < currentShape[row].length; col++) {
+                    if (currentShape[row][col]) {
+                        let newX = currentX + col + offsetX;
+                        let newY = currentY + row + offsetY;
+                        if (newX < 0 || newX >= COLS || newY >= ROWS || grid[newY][newX]) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function mergeShape() {
+            for (let row = 0; row < currentShape.length; row++) {
+                for (let col = 0; col < currentShape[row].length; col++) {
+                    if (currentShape[row][col]) {
+                        grid[currentY + row][currentX + col] = 1;
+                    }
+                }
+            }
+            clearLines();
+        }
+
+        function clearLines() {
+            for (let row = ROWS - 1; row >= 0; row--) {
+                if (grid[row].every(cell => cell)) {
+                    grid.splice(row, 1);
+                    grid.unshift(Array(COLS).fill(0));
+                    row++;
+                }
+            }
+        }
+
+        function draw() {
+            drawGrid();
+            drawShape();
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft' && !collision(-1, 0)) currentX--;
+            if (event.key === 'ArrowRight' && !collision(1, 0)) currentX++;
+            if (event.key === 'ArrowDown') moveShapeDown();
+            if (event.key === 'ArrowUp') rotateShape();
+        });
+
+        function rotateShape() {
+            const rotatedShape = currentShape[0].map((_, index) =>
+                currentShape.map(row => row[index]).reverse()
+            );
+            const originalShape = currentShape;
+            currentShape = rotatedShape;
+            if (collision(0, 0)) currentShape = originalShape;
+        }
+
+        setInterval(() => {
+            moveShapeDown();
+            draw();
+        }, 500);
+    </script>
+</body>
+</html>
