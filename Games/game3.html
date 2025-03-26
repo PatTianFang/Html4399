@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞机大战游戏</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+        }
+        canvas {
+            border: 1px solid #fff;
+            background-color: #111;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const player = {
+            x: canvas.width / 2 - 15,
+            y: canvas.height - 50,
+            width: 30,
+            height: 30,
+            color: 'blue',
+            speed: 5
+        };
+
+        const bullets = [];
+        const enemies = [];
+        const enemySpeed = 2;
+        let score = 0;
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawBullets() {
+            ctx.fillStyle = 'yellow';
+            bullets.forEach((bullet, index) => {
+                ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+                bullet.y -= bullet.speed;
+
+                // 移除超出屏幕的子弹
+                if (bullet.y < 0) {
+                    bullets.splice(index, 1);
+                }
+            });
+        }
+
+        function drawEnemies() {
+            ctx.fillStyle = 'red';
+            enemies.forEach((enemy, index) => {
+                ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+                enemy.y += enemySpeed;
+
+                // 检查敌人是否超出屏幕
+                if (enemy.y > canvas.height) {
+                    enemies.splice(index, 1);
+                }
+
+                // 检查玩家碰撞
+                if (
+                    enemy.x < player.x + player.width &&
+                    enemy.x + enemy.width > player.x &&
+                    enemy.y < player.y + player.height &&
+                    enemy.y + enemy.height > player.y
+                ) {
+                    alert('游戏结束！得分：' + score);
+                    document.location.reload();
+                }
+            });
+        }
+
+        function spawnEnemy() {
+            const x = Math.random() * (canvas.width - 30);
+            enemies.push({ x, y: 0, width: 30, height: 30 });
+        }
+
+        function checkCollisions() {
+            bullets.forEach((bullet, bIndex) => {
+                enemies.forEach((enemy, eIndex) => {
+                    if (
+                        bullet.x < enemy.x + enemy.width &&
+                        bullet.x + bullet.width > enemy.x &&
+                        bullet.y < enemy.y + enemy.height &&
+                        bullet.y + bullet.height > enemy.y
+                    ) {
+                        bullets.splice(bIndex, 1);
+                        enemies.splice(eIndex, 1);
+                        score++;
+                    }
+                });
+            });
+        }
+
+        function drawScore() {
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText('得分: ' + score, 10, 20);
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawBullets();
+            drawEnemies();
+            checkCollisions();
+            drawScore();
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'ArrowLeft' && player.x > 0) player.x -= player.speed;
+            if (event.key === 'ArrowRight' && player.x < canvas.width - player.width) player.x += player.speed;
+            if (event.key === ' ') {
+                bullets.push({
+                    x: player.x + player.width / 2 - 2.5,
+                    y: player.y,
+                    width: 5,
+                    height: 10,
+                    speed: 7
+                });
+            }
+        });
+
+        setInterval(spawnEnemy, 1000);
+        gameLoop();
+    </script>
+</body>
+</html>
