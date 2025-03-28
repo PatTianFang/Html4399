@@ -2,16 +2,69 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: var(--background-color, #f9f9f9);
+    color: var(--text-color, #333);
+    transition: background-color 0.3s, color 0.3s;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, #4CAF50, #2196F3);
+    background-size: 200% 200%;
+    z-index: -1;
+    animation: gradientAnimation 10s infinite;
+}
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+    background-color: var(--header-background, #4CAF50);
+    color: var(--header-text, white);
+    padding: 20px;
     text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.header-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+header input {
+    padding: 10px;
+    width: 60%;
+    max-width: 400px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+header button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-background, #333);
+    color: var(--button-text, white);
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+header button:hover {
+    background-color: var(--button-hover, #555);
 }
 nav {
-    background-color: #333;
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--nav-background, #333);
 }
 nav a {
     float: left;
@@ -25,33 +78,122 @@ nav a:hover {
     background-color: #ddd;
     color: black;
 }
+nav button, nav .about-link {
+    background-color: var(--button-background, #4CAF50);
+    color: var(--button-text, white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+nav button:hover, nav .about-link:hover {
+    background-color: var(--button-hover, #45a049);
+}
+.featured-games {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--about-background, #f4f4f4);
+    border-bottom: 1px solid #ddd;
+}
+.featured-games h2 {
+    margin-bottom: 20px;
+}
+.game-list-section {
+    padding: 20px;
+}
 .game-list {
     display: flex;
     flex-wrap: wrap;
-    padding: 20px;
+    justify-content: center;
     gap: 20px;
 }
 .game-item {
     width: 200px;
     text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.game-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 .game-item img {
     width: 100%;
     height: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 10px 10px 0 0;
     cursor: pointer;
 }
-.game-item img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 .game-item a {
+    display: block;
+    padding: 10px;
     text-decoration: none;
     color: #333;
     font-weight: bold;
 }
 .game-item a:hover {
     color: #4CAF50;
+}
+.about-section {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--about-background, #f4f4f4);
+    border-top: 1px solid #ddd;
+}
+.leaderboard {
+    padding: 20px;
+    text-align: center;
+    background-color: var(--about-background, #f4f4f4);
+    border-top: 1px solid #ddd;
+}
+.leaderboard h2 {
+    margin-bottom: 20px;
+}
+.leaderboard ol {
+    list-style: none;
+    padding: 0;
+}
+.leaderboard li {
+    font-size: 18px;
+    margin: 10px 0;
+    color: var(--text-color, #333);
+}
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: var(--nav-background, #333);
+    color: var(--header-text, white);
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+.user-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid var(--header-text, white);
+}
+.welcome-message {
+    margin-top: 10px;
+    font-size: 18px;
+    color: var(--text-color, #333);
+    text-align: center;
+    animation: fadeIn 2s ease-in-out;
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

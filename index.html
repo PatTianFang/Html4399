@@ -9,33 +9,76 @@
 <body>
     <header>
         <h1>小游戏导航</h1>
+        <div class="header-actions">
+            <input type="text" id="searchBox" placeholder="搜索游戏..." oninput="filterGames()">
+            <button id="themeToggle" onclick="toggleTheme()">切换主题</button>
+            <button id="loginButton" onclick="login()">登录</button>
+            <button id="registerButton" onclick="register()">注册</button>
+        </div>
+        <div class="user-info">
+            <img id="userAvatar" src="IMG/default-avatar.png" alt="用户头像">
+            <p id="welcomeMessage" class="welcome-message">欢迎来到小游戏导航！</p>
+        </div>
     </header>
     <nav>
-        <a href="#action">动作类</a>
-        <a href="#puzzle">益智类</a>
-        <a href="#sports">体育类</a>
-        <a href="#strategy">策略类</a>
+        <button onclick="filterCategory('all')">全部</button>
+        <button onclick="filterCategory('action')">动作类</button>
+        <button onclick="filterCategory('puzzle')">益智类</button>
+        <button onclick="filterCategory('sports')">体育类</button>
+        <button onclick="filterCategory('strategy')">策略类</button>
+        <a href="#about" class="about-link">关于我们</a>
     </nav>
     <main>
-        <section class="game-list">
-            <div class="game-item">
-                <img src="IMG/game1.jpg" alt="游戏1" onclick="navigateTo('Games/game1.html')">
-                <a href="Games/game1.html">游戏1</a>
-            </div>
-            <div class="game-item">
-                <img src="IMG/game2.jpg" alt="游戏2" onclick="navigateTo('Games/game2.html')">
-                <a href="Games/game2.html">游戏2</a>
-            </div>
-            <div class="game-item">
-                <img src="IMG/game3.jpg" alt="游戏3" onclick="navigateTo('Games/game3.html')">
-                <a href="Games/game3.html">游戏3</a>
-            </div>
-            <div class="game-item">
-                <img src="IMG/game4.jpg" alt="2048" onclick="navigateTo('Games/2048.html')">
-                <a href="Games/2048.html">2048</a>
+        <section class="featured-games">
+            <h2>热门推荐</h2>
+            <div class="game-list">
+                <div class="game-item" data-category="action">
+                    <img src="IMG/game1.jpg" alt="游戏1" onclick="navigateTo('Games/game1.html')">
+                    <a href="Games/game1.html">游戏1</a>
+                </div>
+                <div class="game-item" data-category="puzzle">
+                    <img src="IMG/game2.jpg" alt="游戏2" onclick="navigateTo('Games/game2.html')">
+                    <a href="Games/game2.html">游戏2</a>
+                </div>
             </div>
         </section>
+        <section class="game-list-section">
+            <h2>所有游戏</h2>
+            <div class="game-list" id="gameList">
+                <div class="game-item" data-category="action">
+                    <img src="IMG/game1.jpg" alt="游戏1" onclick="navigateTo('Games/game1.html')">
+                    <a href="Games/game1.html">游戏1</a>
+                </div>
+                <div class="game-item" data-category="puzzle">
+                    <img src="IMG/game2.jpg" alt="游戏2" onclick="navigateTo('Games/game2.html')">
+                    <a href="Games/game2.html">游戏2</a>
+                </div>
+                <div class="game-item" data-category="sports">
+                    <img src="IMG/game3.jpg" alt="游戏3" onclick="navigateTo('Games/game3.html')">
+                    <a href="Games/game3.html">游戏3</a>
+                </div>
+                <div class="game-item" data-category="strategy">
+                    <img src="IMG/game4.jpg" alt="2048" onclick="navigateTo('Games/2048.html')">
+                    <a href="Games/2048.html">2048</a>
+                </div>
+            </div>
+        </section>
+        <section class="leaderboard">
+            <h2>排行榜</h2>
+            <ol id="leaderboardList">
+                <li>玩家1 - 500分</li>
+                <li>玩家2 - 450分</li>
+                <li>玩家3 - 400分</li>
+            </ol>
+        </section>
+        <section id="about" class="about-section">
+            <h2>关于我们</h2>
+            <p>这是一个小游戏导航项目，旨在为用户提供轻松有趣的游戏体验。</p>
+        </section>
     </main>
+    <footer>
+        <p>&copy; 2025 PatTianFang@outlook.com. 版权所有。</p>
+    </footer>
     <script src="script.js"></script>
 </body>
 </html>

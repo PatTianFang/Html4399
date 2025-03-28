@@ -10,10 +10,50 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             background-color: #f4f4f4;
+            overflow: hidden;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header button {
+            background-color: white;
+            color: #4CAF50;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        header button:hover {
+            background-color: #ddd;
+        }
+        header .score {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 60px;
+            width: 100%;
         }
         canvas {
             border: 1px solid #000;
@@ -22,8 +62,18 @@
     </style>
 </head>
 <body>
-    <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+    <header>
+        <button onclick="navigateHome()">返回主页</button>
+        <div class="score">积分: <span id="score">0</span></div>
+    </header>
+    <main>
+        <canvas id="tetrisCanvas" width="300" height="600"></canvas>
+    </main>
     <script>
+        function navigateHome() {
+            window.location.href = '../index.html';
+        }
+
         const canvas = document.getElementById('tetrisCanvas');
         const ctx = canvas.getContext('2d');
         const ROWS = 20;
@@ -47,6 +97,7 @@
         let currentShape = getRandomShape();
         let currentX = 3;
         let currentY = 0;
+        let score = 0;
 
         function getRandomShape() {
             return SHAPES[Math.floor(Math.random() * SHAPES.length)];
@@ -88,6 +139,8 @@
                 if (collision(0, 0)) {
                     alert('游戏结束！');
                     grid = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+                    score = 0;
+                    document.getElementById('score').textContent = score;
                 }
             }
         }
@@ -123,6 +176,8 @@
                 if (grid[row].every(cell => cell)) {
                     grid.splice(row, 1);
                     grid.unshift(Array(COLS).fill(0));
+                    score += 10;
+                    document.getElementById('score').textContent = score;
                     row++;
                 }
             }

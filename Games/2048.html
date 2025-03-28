@@ -10,10 +10,50 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
             background-color: #f4f4f4;
+            overflow: hidden;
+        }
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        header button {
+            background-color: white;
+            color: #4CAF50;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        header button:hover {
+            background-color: #ddd;
+        }
+        header .score {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 60px;
+            width: 100%;
         }
         canvas {
             background-color: #bbada0;
@@ -23,13 +63,24 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <header>
+        <button onclick="navigateHome()">返回主页</button>
+        <div class="score">积分: <span id="score">0</span></div>
+    </header>
+    <main>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+    </main>
     <script>
+        function navigateHome() {
+            window.location.href = '../index.html';
+        }
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const size = 4;
         const tileSize = canvas.width / size;
         let board = Array.from({ length: size }, () => Array(size).fill(0));
+        let score = 0;
 
         function drawBoard() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -38,6 +89,7 @@
                     drawTile(row, col, board[row][col]);
                 }
             }
+            document.getElementById('score').textContent = score;
         }
 
         function drawTile(row, col, value) {
@@ -98,8 +150,10 @@
                     board[row] = newTiles;
                 }
             }
-            if (moved) addRandomTile();
-            drawBoard();
+            if (moved) {
+                addRandomTile();
+                drawBoard();
+            }
         }
 
         function merge(tiles) {
@@ -107,6 +161,7 @@
             for (let i = 0; i < newTiles.length - 1; i++) {
                 if (newTiles[i] === newTiles[i + 1]) {
                     newTiles[i] *= 2;
+                    score += newTiles[i];
                     newTiles.splice(i + 1, 1);
                 }
             }
