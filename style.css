@@ -40,6 +40,12 @@ nav a:hover {
     height: auto;
     border: 1px solid #ccc;
     border-radius: 5px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+.game-item img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .game-item a {
     text-decoration: none;
