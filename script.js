@@ -77,22 +77,24 @@ async function login() {
 async function register() {
     const username = prompt("请输入注册用户名：");
     const password = prompt("请输入注册密码：");
+    const avatar = prompt("请输入头像图片的URL（可选）：", "IMG/default-avatar.png");
     if (username && password) {
-        const avatar = prompt("请输入头像图片的URL（可选）：", "IMG/default-avatar.png");
         try {
-            fetch('http://localhost:3000/register', {
+            console.log('发送注册请求:', { username, password, avatar }); // 添加日志
+            const response = await fetch('http://localhost:3000/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            }).then(response => response.json())
-              .then(result => {
-                  alert(result.message);
-                  if (result.message === '注册成功') {
-                      document.getElementById('welcomeMessage').textContent = `欢迎，${username}！`;
-                      document.getElementById('userAvatar').src = avatar || "IMG/default-avatar.png";
-                  }
-              });
+                body: JSON.stringify({ username, password, avatar })
+            });
+            const result = await response.json();
+            console.log('注册响应:', result); // 添加日志
+            alert(result.message);
+            if (response.ok) {
+                document.getElementById('welcomeMessage').textContent = `欢迎，${username}！`;
+                document.getElementById('userAvatar').src = avatar || "IMG/default-avatar.png";
+            }
         } catch (error) {
+            console.error('注册请求失败:', error); // 打印详细错误信息
             alert('注册失败，请稍后再试');
         }
     } else {
